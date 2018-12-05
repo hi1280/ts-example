@@ -25,6 +25,8 @@
     "qiita-cli": "dist/main.js"
   },
   "dependencies": {
-    "axios": "^0.18.0"
+    "@types/sinon": "^5.0.7",
+    "axios": "^0.18.0",
+    "sinon": "^7.1.1"
   }
 }

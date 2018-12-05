@@ -1,9 +1,15 @@
 import assert = require("assert");
-import {main} from "../src/main";
+import axios from "axios";
+import sinon from "sinon";
+import { main } from "../src/main";
 
 describe("main()", () => {
-    const message = "world!";
-    it("hello world!", () => {
-        assert(main(message) === "Hello world");
+    it("assert response", async () => {
+        const resolved = Promise.resolve<any>({
+            data: new Array(20),
+          });
+        sinon.stub(axios, "get").returns(resolved);
+        const res = await main();
+        assert(res.data.length === 20);
     });
 });
