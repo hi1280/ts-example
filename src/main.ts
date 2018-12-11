@@ -12,7 +12,7 @@ export async function main() {
     return JSON.parse(res);
   } else {
     res = await axios.get<Qiita[]>('https://qiita.com/api/v2/items');
-    client.set('items', JSON.stringify(res.data));
+    client.set('items', JSON.stringify(res.data), 'EX', 60);
     return res.data;
   }
 }
