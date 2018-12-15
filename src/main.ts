@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import axios from 'axios';
 import elasticsearch from 'elasticsearch';
 import redis from 'redis';
@@ -20,7 +19,7 @@ export async function main() {
   if (items) {
     returned = JSON.parse(items);
   } else {
-    const res = await axios.get<Qiita[]>('https://qiita.com/api/v2/items');
+    const res = await get();
     client.set('items', JSON.stringify(res.data), 'EX', 1800);
     const body: Array<{}> = [];
     res.data.forEach(d => {
@@ -40,6 +39,10 @@ export async function main() {
   }
   client.quit();
   return returned;
+}
+
+export function get() {
+  return axios.get<Qiita[]>('https://qiita.com/api/v2/items');
 }
 
 if (require.main === module) {

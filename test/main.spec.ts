@@ -1,7 +1,7 @@
 import assert = require('assert');
 import axios from 'axios';
 import sinon from 'sinon';
-import { main } from '../src/main';
+import { get } from '../src/main';
 
 describe('main()', () => {
   it('assert response', async () => {
@@ -9,7 +9,7 @@ describe('main()', () => {
       data: new Array(20),
     });
     sinon.stub(axios, 'get').returns(resolved);
-    const res = await main();
-    assert(res.length === 20);
+    const res = await get();
+    assert(res.data.length === 20);
   });
 });

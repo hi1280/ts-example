@@ -46,10 +46,6 @@
   "files": [
     "dist/**/*"
   ],
-  "bin": {
-    "qiita-cli": "dist/main.js",
-    "qiita-service": "dist/index.js"
-  },
   "dependencies": {
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
