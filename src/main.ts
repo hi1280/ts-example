@@ -6,19 +6,22 @@ import { promisify } from 'util';
 import { Qiita } from './qiita';
 
 const esclient = new elasticsearch.Client({
-  host: 'localhost:9200',
-  log: 'trace',
+  host: `${process.env.ES_HOST}:${process.env.ES_PORT}`,
 });
 
 export async function main() {
-  const client = redis.createClient();
+  const client = redis.createClient({
+    host: process.env.REDIS_HOST,
+    port: parseInt(process.env.REDIS_PORT!, 10),
+  });
   const getAsync = promisify(client.get).bind(client);
-  const items = (await getAsync('items')) as any;
+  const items = await getAsync('items');
+  let returned = null;
   if (items) {
-    return JSON.parse(items);
+    returned = JSON.parse(items);
   } else {
     const res = await axios.get<Qiita[]>('https://qiita.com/api/v2/items');
-    client.set('items', JSON.stringify(res.data), 'EX', 60);
+    client.set('items', JSON.stringify(res.data), 'EX', 1800);
     const body: Array<{}> = [];
     res.data.forEach(d => {
       body.push({
@@ -33,10 +36,14 @@ export async function main() {
       index: 'qiita',
       type: 'items',
     });
-    return res.data;
+    returned = res.data;
   }
+  client.quit();
+  return returned;
 }
 
 if (require.main === module) {
-  main();
+  main().then(res => {
+    console.log(res);
+  });
 }
