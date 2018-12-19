@@ -11,6 +11,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install --production --silent
 COPY --from=build-stage /usr/src/app/dist /usr/src/app/dist
+COPY ./src/*.graphql ./dist/
 EXPOSE 3000
 ENV NODE_ENV production
 CMD [ "node", "dist/index.js" ]

@@ -2,6 +2,7 @@ import bodyParser from 'body-parser';
 import compression from 'compression';
 import cors from 'cors';
 import express from 'express';
+import { GraphQLServer } from 'graphql-yoga';
 import helmet from 'helmet';
 import { main } from './main';
 
@@ -13,10 +14,21 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.get('/', async (_, res) => {
-  const data = await main();
-  return res.json(data);
+const resolvers = {
+  Query: {
+    get: () => main().then(v => v),
+    info: () => `This is the API of a Hackernews Clone`,
+  },
+};
+
+const server = new GraphQLServer({
+  resolvers,
+  typeDefs: './dist/schema.graphql',
 });
 
+async function get() {
+  return await main();
+}
+
 const port = process.env.PORT || '3000';
-app.listen(port, () => console.info(`API running on localhost:${port}`));
+server.start({ port }, () => console.info(`API running on localhost:${port}`));
