@@ -26,9 +26,5 @@ const server = new GraphQLServer({
   typeDefs: './dist/schema.graphql',
 });
 
-async function get() {
-  return await main();
-}
-
 const port = process.env.PORT || '3000';
 server.start({ port }, () => console.info(`API running on localhost:${port}`));
