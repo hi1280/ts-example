@@ -16,7 +16,7 @@
   "lint-staged": {
     "*.ts": [
       "prettier --write",
-      "npm run lint",
+      "npm run lint --",
       "git add"
     ]
   },
